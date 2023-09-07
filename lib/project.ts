@@ -12,220 +12,220 @@ import { ICompiler, ProjectCompiler, FileCompiler } from "./compiler";
 import { FinalTransformers, TsConfig } from "./types";
 
 interface PartialProject {
-  (reporter?: Reporter): ICompileStream;
+	(reporter?: Reporter): ICompileStream;
 
-  src?(this: Project): NodeJS.ReadWriteStream;
+	src?(this: Project): NodeJS.ReadWriteStream;
 
-  typescript?: typeof ts;
-  projectDirectory?: string;
-  configFileName?: string;
-  rawConfig?: any;
-  config?: TsConfig;
-  options?: ts.CompilerOptions;
-  projectReferences?: ReadonlyArray<ts.ProjectReference>;
+	typescript?: typeof ts;
+	projectDirectory?: string;
+	configFileName?: string;
+	rawConfig?: any;
+	config?: TsConfig;
+	options?: ts.CompilerOptions;
+	projectReferences?: ReadonlyArray<ts.ProjectReference>;
 }
 export interface Project {
-  (reporter?: Reporter): ICompileStream;
+	(reporter?: Reporter): ICompileStream;
 
-  src(this: Project): NodeJS.ReadWriteStream;
+	src(this: Project): NodeJS.ReadWriteStream;
 
-  readonly typescript?: typeof ts;
-  readonly projectDirectory: string;
-  readonly configFileName: string;
-  readonly rawConfig: any;
-  readonly config: TsConfig;
-  readonly options: ts.CompilerOptions;
-  readonly projectReferences: ReadonlyArray<ts.ProjectReference> | undefined;
+	readonly typescript?: typeof ts;
+	readonly projectDirectory: string;
+	readonly configFileName: string;
+	readonly rawConfig: any;
+	readonly config: TsConfig;
+	readonly options: ts.CompilerOptions;
+	readonly projectReferences: ReadonlyArray<ts.ProjectReference> | undefined;
 }
 
 export interface ProjectInfo {
-  input: FileCache;
-  output?: Output;
-  compiler: ICompiler;
-  singleOutput: boolean;
-  options: ts.CompilerOptions;
-  projectReferences: ReadonlyArray<ts.ProjectReference>;
-  typescript: typeof ts;
-  directory: string;
-  reporter?: Reporter;
+	input: FileCache;
+	output?: Output;
+	compiler: ICompiler;
+	singleOutput: boolean;
+	options: ts.CompilerOptions;
+	projectReferences: ReadonlyArray<ts.ProjectReference>;
+	typescript: typeof ts;
+	directory: string;
+	reporter?: Reporter;
 }
 
 function src(this: Project) {
-  if (arguments.length >= 1) {
-    utils.message(
-      "tsProject.src() takes no arguments",
-      "Use gulp.src(..) if you need to specify a glob"
-    );
-  }
+	if (arguments.length >= 1) {
+		utils.message(
+			"tsProject.src() takes no arguments",
+			"Use gulp.src(..) if you need to specify a glob",
+		);
+	}
 
-  let base: string;
-  if (this.options["rootDir"]) {
-    base = path.resolve(this.projectDirectory, this.options["rootDir"]);
-  }
+	let base: string;
+	if (this.options["rootDir"]) {
+		base = path.resolve(this.projectDirectory, this.options["rootDir"]);
+	}
 
-  const { extends: ignoreExtends, ...config } = this.rawConfig;
+	const { extends: ignoreExtends, ...config } = this.rawConfig;
 
-  const { fileNames, errors } = this.typescript.parseJsonConfigFileContent(
-    config,
-    this.typescript.sys,
-    path.resolve(this.projectDirectory),
-    undefined,
-    this.configFileName
-  );
+	const { fileNames, errors } = this.typescript.parseJsonConfigFileContent(
+		config,
+		this.typescript.sys,
+		path.resolve(this.projectDirectory),
+		undefined,
+		this.configFileName,
+	);
 
-  for (const error of errors) {
-    console.log(error.messageText);
-  }
+	for (const error of errors) {
+		console.log(error.messageText);
+	}
 
-  if (base === undefined)
-    base = utils.getCommonBasePathOfArray(
-      fileNames
-        .filter(file => file.substr(-5) !== ".d.ts")
-        .map(file => path.dirname(file))
-    );
+	if (base === undefined)
+		base = utils.getCommonBasePathOfArray(
+			fileNames
+				.filter((file) => file.substr(-5) !== ".d.ts")
+				.map((file) => path.dirname(file)),
+		);
 
-  const vinylOptions = { base, allowEmpty: true };
-  return vfs.src(fileNames, vinylOptions);
+	const vinylOptions = { base, allowEmpty: true };
+	return vfs.src(fileNames, vinylOptions);
 }
 
 class CompileOutputStream extends stream.Readable {
-  constructor() {
-    super({ objectMode: true });
-  }
+	constructor() {
+		super({ objectMode: true });
+	}
 
-  // eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, @swissquote/swissquote/@typescript-eslint/no-empty-function
-  _read() {}
+	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, @swissquote/swissquote/@typescript-eslint/no-empty-function
+	_read() {}
 }
 
 export interface ICompileStream extends NodeJS.ReadWriteStream {
-  js: stream.Readable;
-  dts: stream.Readable;
+	js: stream.Readable;
+	dts: stream.Readable;
 }
 class CompileStream extends stream.Duplex implements ICompileStream {
-  constructor(project: ProjectInfo) {
-    super({ objectMode: true });
+	constructor(project: ProjectInfo) {
+		super({ objectMode: true });
 
-    this.project = project;
-  }
+		this.project = project;
+	}
 
-  private project: ProjectInfo;
+	private project: ProjectInfo;
 
-  // eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention
-  _write(file: any, encoding: string, cb: (err?: any) => void): void;
-  // eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, consistent-return
-  _write(file: VinylFile, encoding: string, cb = (err?: any) => {}) {
-    if (!file) {
-      return cb();
-    }
+	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention
+	_write(file: any, encoding: string, cb: (err?: any) => void): void;
+	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, consistent-return
+	_write(file: VinylFile, encoding: string, cb = (err?: any) => {}) {
+		if (!file) {
+			return cb();
+		}
 
-    if (file.isNull()) {
-      cb();
-      // eslint-disable-next-line consistent-return
-      return;
-    }
-    if (file.isStream()) {
-      return cb(new PluginError("gulp-typescript", "Streaming not supported"));
-    }
+		if (file.isNull()) {
+			cb();
+			// eslint-disable-next-line consistent-return
+			return;
+		}
+		if (file.isStream()) {
+			return cb(new PluginError("gulp-typescript", "Streaming not supported"));
+		}
 
-    const inputFile = this.project.input.addGulp(file);
+		const inputFile = this.project.input.addGulp(file);
 
-    this.project.compiler.inputFile(inputFile);
+		this.project.compiler.inputFile(inputFile);
 
-    cb();
-  }
+		cb();
+	}
 
-  // eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/no-empty-function, @swissquote/swissquote/@typescript-eslint/naming-convention
-  _read() {}
+	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/no-empty-function, @swissquote/swissquote/@typescript-eslint/naming-convention
+	_read() {}
 
-  end(chunk?: any, encoding?: any, callback?: any): this {
-    if (typeof chunk === "function") {
-      this._write(null, null, chunk);
-    } else if (typeof encoding === "function") {
-      this._write(chunk, null, encoding);
-    } else {
-      this._write(chunk, encoding, callback);
-    }
-    this.project.compiler.inputDone();
+	end(chunk?: any, encoding?: any, callback?: any): this {
+		if (typeof chunk === "function") {
+			this._write(null, null, chunk);
+		} else if (typeof encoding === "function") {
+			this._write(chunk, null, encoding);
+		} else {
+			this._write(chunk, encoding, callback);
+		}
+		this.project.compiler.inputDone();
 
-    return this;
-  }
+		return this;
+	}
 
-  js: stream.Readable = new CompileOutputStream();
-  dts: stream.Readable = new CompileOutputStream();
+	js: stream.Readable = new CompileOutputStream();
+	dts: stream.Readable = new CompileOutputStream();
 }
 
 export function setupProject(
-  projectDirectory: string,
-  configFileName: string,
-  rawConfig: any,
-  config: TsConfig,
-  options: ts.CompilerOptions,
-  projectReferences: ReadonlyArray<ts.ProjectReference>,
-  typescript: typeof ts,
-  finalTransformers: FinalTransformers
+	projectDirectory: string,
+	configFileName: string,
+	rawConfig: any,
+	config: TsConfig,
+	options: ts.CompilerOptions,
+	projectReferences: ReadonlyArray<ts.ProjectReference>,
+	typescript: typeof ts,
+	finalTransformers: FinalTransformers,
 ) {
-  const caseSensitive = typescript
-    .createCompilerHost(options)
-    .useCaseSensitiveFileNames();
-  const input = new FileCache(typescript, options, caseSensitive);
-  const compiler: ICompiler = options.isolatedModules
-    ? new FileCompiler()
-    : new ProjectCompiler();
-  let running = false;
+	const caseSensitive = typescript
+		.createCompilerHost(options)
+		.useCaseSensitiveFileNames();
+	const input = new FileCache(typescript, options, caseSensitive);
+	const compiler: ICompiler = options.isolatedModules
+		? new FileCompiler()
+		: new ProjectCompiler();
+	let running = false;
 
-  if (options.isolatedModules) {
-    options.newLine = typescript.NewLineKind.LineFeed;
-    options.sourceMap = false;
-    options.declaration = false;
-    options.inlineSourceMap = true;
-  }
+	if (options.isolatedModules) {
+		options.newLine = typescript.NewLineKind.LineFeed;
+		options.sourceMap = false;
+		options.declaration = false;
+		options.inlineSourceMap = true;
+	}
 
-  const singleOutput =
-    options.out !== undefined || options.outFile !== undefined;
+	const singleOutput =
+		options.out !== undefined || options.outFile !== undefined;
 
-  const projectInfo: ProjectInfo = {
-    input,
-    singleOutput,
-    compiler,
-    options,
-    projectReferences,
-    typescript,
-    directory: projectDirectory,
-    // Set when `project` is called
-    output: undefined,
-    reporter: undefined
-  };
+	const projectInfo: ProjectInfo = {
+		input,
+		singleOutput,
+		compiler,
+		options,
+		projectReferences,
+		typescript,
+		directory: projectDirectory,
+		// Set when `project` is called
+		output: undefined,
+		reporter: undefined,
+	};
 
-  const project: PartialProject = reporter => {
-    if (running) {
-      throw new Error(
-        "gulp-typescript: A project cannot be used in two compilations at the same time. Create multiple projects with createProject instead."
-      );
-    }
-    running = true;
+	const project: PartialProject = (reporter) => {
+		if (running) {
+			throw new Error(
+				"gulp-typescript: A project cannot be used in two compilations at the same time. Create multiple projects with createProject instead.",
+			);
+		}
+		running = true;
 
-    input.reset();
-    compiler.prepare(projectInfo, finalTransformers);
+		input.reset();
+		compiler.prepare(projectInfo, finalTransformers);
 
-    const stream = new CompileStream(projectInfo);
-    projectInfo.output = new Output(projectInfo, stream, stream.js, stream.dts);
-    projectInfo.reporter = reporter || defaultReporter();
+		const stream = new CompileStream(projectInfo);
+		projectInfo.output = new Output(projectInfo, stream, stream.js, stream.dts);
+		projectInfo.reporter = reporter || defaultReporter();
 
-    stream.on("finish", () => {
-      running = false;
-    });
+		stream.on("finish", () => {
+			running = false;
+		});
 
-    return stream;
-  };
+		return stream;
+	};
 
-  project.src = src;
-  project.typescript = typescript;
-  project.projectDirectory = projectDirectory;
-  project.configFileName = configFileName;
-  project.rawConfig = rawConfig;
-  project.config = config;
-  project.options = options;
-  project.projectReferences = projectReferences;
+	project.src = src;
+	project.typescript = typescript;
+	project.projectDirectory = projectDirectory;
+	project.configFileName = configFileName;
+	project.rawConfig = rawConfig;
+	project.config = config;
+	project.options = options;
+	project.projectReferences = projectReferences;
 
-  return project as Project;
+	return project as Project;
 }

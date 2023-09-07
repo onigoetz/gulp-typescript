@@ -59,11 +59,11 @@ API overview
 ------------
 gulp-typescript can be imported using `const ts = require('gulp-typescript');`. It provides the following functions:
 
-- `ts(options?)` - Returns a gulp stream that compiles TypeScript files using the specified options.
+- `ts.compile(options?)` - Returns a gulp stream that compiles TypeScript files using the specified options.
 - `ts.createProject(options?)`, `ts.createProject(tsconfig filename, options?)` - Returns a project. The intended usage is to create a project outside of a task with `const tsProject = ts.createProject(..);`. Within a task, `tsProject()` can be used to compile a stream of TypeScript files.
 - `tsProject.src()` - Returns a stream containing the source files (.ts) from a tsconfig file. It can only be used if you create a project with a `tsconfig.json` file. It is a replacement for `gulp.src(..)`.
 
-Both `ts(..)` and `tsProject()` provide sub-streams that only contain the JavaScript or declaration files. An example is shown later in the readme.
+Both `ts.compile(..)` and `tsProject()` provide sub-streams that only contain the JavaScript or declaration files. An example is shown later in the readme.
 
 Basic Usage
 ----------
@@ -75,7 +75,7 @@ var ts = require('gulp-typescript');
 
 gulp.task('default', function () {
     return gulp.src('src/**/*.ts')
-        .pipe(ts({
+        .pipe(ts.compile({
             noImplicitAny: true,
             outFile: 'output.js'
         }))
@@ -90,7 +90,7 @@ var merge = require('merge2');  // Requires separate installation
 
 gulp.task('scripts', function() {
     var tsResult = gulp.src('lib/**/*.ts')
-        .pipe(ts({
+        .pipe(ts.compile({
             declaration: true
         }));
 
@@ -108,7 +108,7 @@ If you don't need the definition files, you can use a configuration as seen in t
 
 Incremental compilation
 -----------------------
-Instead of calling `ts(options)`, you can create a project first outside of the task. Inside the task, you should then use `tsProject()`. An example:
+Instead of calling `ts.compile(options)`, you can create a project first outside of the task. Inside the task, you should then use `tsProject()`. An example:
 ```javascript
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
@@ -162,7 +162,7 @@ You can install the latest stable version using `npm install typescript --save-d
 
 You can also use a fork of TypeScript, if it is based on TypeScript 2.x. You can configure this in your gulpfile:
 ```javascript
-[...].pipe(ts({
+[...].pipe(ts.compile({
     typescript: require('my-fork-of-typescript')
 }));
 ```
@@ -187,7 +187,7 @@ var sourcemaps = require('gulp-sourcemaps');
 gulp.task('scripts', function() {
     return gulp.src('lib/*.ts')
         .pipe(sourcemaps.init()) // This means sourcemaps will be generated
-        .pipe(ts({
+        .pipe(ts.compile({
             // ...
         }))
         .pipe( ... ) // You can use other plugins that also support gulp-sourcemaps
@@ -207,7 +207,7 @@ Furthermore you should set `includeContent: false`. Here's an example where `out
 gulp.task('scripts', function() {
     return gulp.src('lib/*.ts')
         .pipe(sourcemaps.init())
-        .pipe(ts({
+        .pipe(ts.compile({
             // ...
         }))
         .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '../lib' }))
@@ -243,7 +243,7 @@ By default, errors are logged to the console and the build crashes on compiler e
 
 If you want to change the way that messages are logged to the console (or some other output), you can provide a reporter. You can specify a custom reporter as the second argument of the main function, or as the only argument when using a `tsProject`:
 ```javascript
-ts(options, reporter);
+ts.compile(options, reporter);
 tsProject(reporter);
 ```
 Available reporters are:
@@ -262,7 +262,7 @@ You should attach an error handler to catch those compilation errors.
 
 ```js
 gulp.src(..)
-  .pipe(ts(..))
+  .pipe(ts.compile(..))
   .on('error', () => { /* Ignore compiler errors */})
   .pipe(gulp.dest(..))
 ```
