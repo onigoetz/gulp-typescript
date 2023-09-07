@@ -4,6 +4,7 @@
   "description": "A typescript compiler for gulp with incremental compilation support.",
   "homepage": "https://github.com/onigoetz/gulp-typescript",
   "bugs": "https://github.com/onigoetz/gulp-typescript/issues",
+  "repository": "onigoetz/gulp-typescript",
   "license": "MIT",
   "keywords": [
     "typescript",
