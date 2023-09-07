@@ -1,3 +1,12 @@
-lib
-test
-typescript
+.github/
+.yarn/
+lib/
+test/
+typescript/
+
+issue_template.md
+ava.config.js
+biome.json
+tsconfig.json
+.editorconfig
+.yarnrc.yml
