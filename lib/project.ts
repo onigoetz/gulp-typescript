@@ -93,7 +93,6 @@ class CompileOutputStream extends stream.Readable {
 		super({ objectMode: true });
 	}
 
-	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, @swissquote/swissquote/@typescript-eslint/no-empty-function
 	_read() {}
 }
 
@@ -110,9 +109,7 @@ class CompileStream extends stream.Duplex implements ICompileStream {
 
 	private project: ProjectInfo;
 
-	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention
 	_write(file: any, encoding: string, cb: (err?: any) => void): void;
-	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/naming-convention, consistent-return
 	_write(file: VinylFile, encoding: string, cb = (err?: any) => {}) {
 		if (!file) {
 			return cb();
@@ -120,7 +117,6 @@ class CompileStream extends stream.Duplex implements ICompileStream {
 
 		if (file.isNull()) {
 			cb();
-			// eslint-disable-next-line consistent-return
 			return;
 		}
 		if (file.isStream()) {
@@ -134,7 +130,6 @@ class CompileStream extends stream.Duplex implements ICompileStream {
 		cb();
 	}
 
-	// eslint-disable-next-line @swissquote/swissquote/@typescript-eslint/no-empty-function, @swissquote/swissquote/@typescript-eslint/naming-convention
 	_read() {}
 
 	end(chunk?: any, encoding?: any, callback?: any): this {

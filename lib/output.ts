@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as stream from "stream";
-import * as sourceMap from "source-map";
+import type { RawSourceMap } from "source-map-js";
+import { SourceMapConsumer, SourceMapGenerator } from "source-map-js";
 import * as ts from "typescript";
 import VinylFile from "vinyl";
 import * as input from "./input";
@@ -155,8 +156,8 @@ export class Output {
 
 		delete map.sourceRoot;
 
-		const consumer = await new sourceMap.SourceMapConsumer(map);
-		const generator = sourceMap.SourceMapGenerator.fromSourceMap(consumer);
+		const consumer = new SourceMapConsumer(map);
+		const generator = SourceMapGenerator.fromSourceMap(consumer);
 
 		const sourceMapOrigins = this.project.singleOutput
 			? this.project.input
@@ -169,7 +170,7 @@ export class Output {
 				continue;
 
 			const inputOriginalMap = sourceFile.gulp.sourceMap;
-			const inputMap: sourceMap.RawSourceMap =
+			const inputMap: RawSourceMap =
 				typeof inputOriginalMap === "object"
 					? inputOriginalMap
 					: JSON.parse(inputOriginalMap);
@@ -177,10 +178,8 @@ export class Output {
 			// We should only apply the input mappings if the input mapping isn't empty,
 			// since `generator.applySourceMap` has a really bad performance on big inputs.
 			if (inputMap.mappings !== "") {
-				// eslint-disable-next-line no-await-in-loop
-				const inputConsumer = await new sourceMap.SourceMapConsumer(inputMap);
+				const inputConsumer = new SourceMapConsumer(inputMap);
 				generator.applySourceMap(inputConsumer);
-				inputConsumer.destroy();
 			}
 
 			if (!inputMap.sources || !inputMap.sourcesContent) continue;
@@ -196,7 +195,6 @@ export class Output {
 				);
 			}
 		}
-		consumer.destroy();
 		return generator.toString();
 	}
 

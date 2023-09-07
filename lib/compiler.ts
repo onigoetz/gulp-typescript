@@ -1,5 +1,5 @@
 import * as path from "path";
-import { RawSourceMap } from "source-map";
+import type { RawSourceMap } from "source-map-js";
 import * as ts from "typescript";
 import { Host } from "./host";
 import { File, FileChangeState } from "./input";
