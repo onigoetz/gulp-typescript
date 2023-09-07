@@ -1,0 +1,34 @@
+name: Node CI
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.x, 18.x, 20.x]
+        include:
+        - os: macos-latest
+          node-version: 16.x
+        # TODO : add Windows build
+        #- os: windows-latest
+        #  node-version: 16.x
+          
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: npm install
+      run: npm install
+    - name: npm build
+      run: npm build
+    - name: Testing
+      run: npm test:ci
+      env:
+        CI: true

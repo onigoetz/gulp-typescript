@@ -1,0 +1,11 @@
+﻿{
+	"compilerOptions": {
+		"target": "ES2020",
+		"declaration": true,
+		"moduleResolution": "Node"
+	},
+	"files": [
+		"Hello.mts",
+		"index.mts"
+	]
+}
