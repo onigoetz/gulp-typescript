@@ -95,5 +95,6 @@
     "check": "biome check lib test/fixtures/*/gulptask.js test/*.js",
     "test": "ava 'test/*\\.test\\.js'",
     "test:ci": "c8 --clean --reporter=text --reporter=lcov --reporter=html --include=index.js ava 'test/*\\.test\\.js'"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }
