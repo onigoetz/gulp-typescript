@@ -1,9 +1,9 @@
-import * as ts from "typescript";
 import * as path from "path";
+import * as ts from "typescript";
 import * as _project from "./project";
-import * as utils from "./utils";
 import * as _reporter from "./reporter";
 import { FinalTransformers, GetCustomTransformers, TsConfig } from "./types";
+import * as utils from "./utils";
 
 function getFinalTransformers(
 	getCustomTransformers?: GetCustomTransformers,
@@ -13,22 +13,22 @@ function getFinalTransformers(
 	}
 
 	if (typeof getCustomTransformers === "string") {
+		let customTransformers: FinalTransformers;
 		try {
-			// eslint-disable-next-line no-param-reassign
-			getCustomTransformers = require(getCustomTransformers);
+			customTransformers = require(getCustomTransformers);
 		} catch (err) {
 			throw new Error(
 				`Failed to load customTransformers from "${getCustomTransformers}": ${err.message}`,
 			);
 		}
 
-		if (typeof getCustomTransformers !== "function") {
+		if (typeof customTransformers !== "function") {
 			throw new Error(
-				`Custom transformers in "${getCustomTransformers}" should export a function, got ${typeof getCustomTransformers}`,
+				`Custom transformers in "${getCustomTransformers}" should export a function, got ${typeof customTransformers}`,
 			);
 		}
 
-		return getCustomTransformers;
+		return customTransformers;
 	}
 
 	return null;
@@ -100,7 +100,7 @@ function normalizeCompilerOptions(
 	typescript: typeof ts,
 ): void {
 	options.sourceMap = true;
-	(options as any).suppressOutputPathCheck = true;
+	options.suppressOutputPathCheck = true;
 	options.inlineSourceMap = false;
 	options.sourceRoot = undefined;
 	options.inlineSources = false;
@@ -199,26 +199,27 @@ export function createProject(
 
 	let rawConfig: any;
 
+	let normalizedSettings = settings;
+
 	if (fileNameOrSettings !== undefined) {
 		if (typeof fileNameOrSettings === "string") {
 			fileName = fileNameOrSettings;
 			tsConfigFileName = path.resolve(process.cwd(), fileName);
 			projectDirectory = path.dirname(tsConfigFileName);
-			// eslint-disable-next-line no-param-reassign
-			if (settings === undefined) settings = {};
+			if (normalizedSettings === undefined) normalizedSettings = {};
 		} else {
-			// eslint-disable-next-line no-param-reassign
-			settings = fileNameOrSettings || {};
+			normalizedSettings = fileNameOrSettings || {};
 		}
 
-		finalTransformers = getFinalTransformers(settings.getCustomTransformers);
+		finalTransformers = getFinalTransformers(
+			normalizedSettings.getCustomTransformers,
+		);
 
-		typescript = getTypeScript(settings.typescript);
-		// eslint-disable-next-line no-param-reassign
-		settings = checkAndNormalizeSettings(settings);
+		typescript = getTypeScript(normalizedSettings.typescript);
+		normalizedSettings = checkAndNormalizeSettings(normalizedSettings);
 
 		const settingsResult = typescript.convertCompilerOptionsFromJson(
-			settings,
+			normalizedSettings,
 			projectDirectory,
 		);
 

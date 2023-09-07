@@ -1,24 +1,24 @@
 const gulp = require("gulp");
-var transformer = require("./simpleTransformer");
+const transformer = require("./simpleTransformer");
 
-module.exports = function(newTS, lib, output, reporter) {
-  var getCustomTransformers = function() {
-    return {
-      // This transformer simply clean file contents.
-      before: [transformer]
-    };
-  };
-  var tsProject = newTS.createProject(
-    "test/fixtures/customTransformers/tsconfig.json",
-    { getCustomTransformers, typescript: lib }
-  );
+module.exports = function (newTS, lib, output, reporter) {
+	const getCustomTransformers = function () {
+		return {
+			// This transformer simply clean file contents.
+			before: [transformer],
+		};
+	};
+	const tsProject = newTS.createProject(
+		"test/fixtures/customTransformers/tsconfig.json",
+		{ getCustomTransformers, typescript: lib },
+	);
 
-  var tsResult = tsProject
-    .src()
-    .pipe(tsProject(reporter))
-    .on("error", () => {});
+	const tsResult = tsProject
+		.src()
+		.pipe(tsProject(reporter))
+		.on("error", () => {});
 
-  return tsResult.js.pipe(gulp.dest(`${output}js`));
+	return tsResult.js.pipe(gulp.dest(`${output}js`));
 };
 
 module.exports.expectFiles = ["js/test-transformers.js"];

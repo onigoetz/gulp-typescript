@@ -1,8 +1,8 @@
-import * as ts from "typescript";
 import * as path from "path";
 import { RawSourceMap } from "source-map";
-import { File, FileChangeState } from "./input";
+import * as ts from "typescript";
 import { Host } from "./host";
+import { File, FileChangeState } from "./input";
 import { ProjectInfo } from "./project";
 import { CompilationResult, emptyCompilationResult } from "./reporter";
 import { FinalTransformers } from "./types";
@@ -24,7 +24,6 @@ interface OutputFile {
 	dtsFileName?: string;
 	dtsContent?: string;
 
-	dtsMapFileName?: string;
 	dtsMapContent?: string;
 }
 
@@ -201,7 +200,6 @@ export class ProjectCompiler implements ICompiler {
 			case "d.cts.map":
 			case "d.mts.map":
 			case "d.ts.map":
-				file.dtsMapFileName = fileName;
 				file.dtsMapContent = content;
 				break;
 			case "d.cts":
@@ -247,11 +245,10 @@ export class ProjectCompiler implements ICompiler {
 	private emitFile(
 		{
 			file,
-			jsFileName,
-			dtsFileName,
-			dtsMapFileName,
-			jsContent,
-			dtsContent,
+			jsFileName: jsFileNameOriginal,
+			dtsFileName: dtsFileNameOriginal,
+			jsContent: jsContentOriginal,
+			dtsContent: dtsContentOriginal,
 			dtsMapContent,
 			jsMapContent,
 		}: OutputFile,
@@ -259,6 +256,12 @@ export class ProjectCompiler implements ICompiler {
 	) {
 		let base: string;
 		let baseDeclarations: string;
+
+		let jsFileName = jsFileNameOriginal;
+		let dtsFileName = dtsFileNameOriginal;
+		let jsContent = jsContentOriginal;
+		let dtsContent = dtsContentOriginal;
+
 		if (file) {
 			base = file.gulp.base;
 			if (this.project.options.outDir) {
@@ -283,18 +286,15 @@ export class ProjectCompiler implements ICompiler {
 			base = this.project.directory;
 			baseDeclarations = base;
 			if (jsFileName !== undefined) {
-				// eslint-disable-next-line no-param-reassign
 				jsFileName = path.resolve(base, jsFileName);
 			}
 			if (dtsFileName !== undefined) {
-				// eslint-disable-next-line no-param-reassign
 				dtsFileName = path.resolve(base, dtsFileName);
 			}
 		}
 
 		if (jsContent !== undefined) {
 			if (jsMapContent !== undefined) {
-				// eslint-disable-next-line no-param-reassign
 				jsContent = this.removeSourceMapComment(jsContent);
 			}
 			this.project.output.writeJs(
@@ -308,7 +308,6 @@ export class ProjectCompiler implements ICompiler {
 		}
 		if (dtsContent !== undefined) {
 			if (dtsMapContent !== undefined) {
-				// eslint-disable-next-line no-param-reassign
 				dtsContent = this.removeSourceMapComment(dtsContent);
 			}
 			this.project.output.writeDts(

@@ -1,15 +1,15 @@
-import * as stream from "stream";
-import * as ts from "typescript";
-import * as vfs from "vinyl-fs";
 import * as path from "path";
+import * as stream from "stream";
 import PluginError from "plugin-error";
+import * as ts from "typescript";
 import VinylFile from "vinyl";
-import * as utils from "./utils";
-import { Reporter, defaultReporter } from "./reporter";
+import * as vfs from "vinyl-fs";
+import { FileCompiler, ICompiler, ProjectCompiler } from "./compiler";
 import { FileCache } from "./input";
 import { Output } from "./output";
-import { ICompiler, ProjectCompiler, FileCompiler } from "./compiler";
+import { Reporter, defaultReporter } from "./reporter";
 import { FinalTransformers, TsConfig } from "./types";
+import * as utils from "./utils";
 
 interface PartialProject {
 	(reporter?: Reporter): ICompileStream;
@@ -59,8 +59,8 @@ function src(this: Project) {
 	}
 
 	let base: string;
-	if (this.options["rootDir"]) {
-		base = path.resolve(this.projectDirectory, this.options["rootDir"]);
+	if (this.options.rootDir) {
+		base = path.resolve(this.projectDirectory, this.options.rootDir);
 	}
 
 	const { extends: ignoreExtends, ...config } = this.rawConfig;

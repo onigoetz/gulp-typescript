@@ -1,12 +1,12 @@
-import * as stream from "stream";
 import * as path from "path";
-import * as ts from "typescript";
+import * as stream from "stream";
 import * as sourceMap from "source-map";
+import * as ts from "typescript";
 import VinylFile from "vinyl";
-import * as utils from "./utils";
 import * as input from "./input";
-import * as reporter from "./reporter";
 import * as project from "./project";
+import * as reporter from "./reporter";
+import * as utils from "./utils";
 
 export class Output {
 	constructor(
@@ -236,7 +236,7 @@ export class Output {
 	}
 
 	private getError(info: ts.Diagnostic): reporter.TypeScriptError {
-		const fileName = info.file && info.file.fileName;
+		const fileName = info.file?.fileName;
 		const file = fileName && this.project.input.getFile(fileName);
 
 		return utils.getError(info, this.project.typescript, file);

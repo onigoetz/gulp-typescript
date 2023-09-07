@@ -1,18 +1,20 @@
-import * as ts from "typescript";
 import * as path from "path";
-import * as utils from "./utils";
+import * as ts from "typescript";
 import { VinylFile } from "./types";
+import * as utils from "./utils";
+
+const has = Function.call.bind(Object.prototype.hasOwnProperty);
 
 export enum FileChangeState {
-	NEW,
-	EQUAL,
-	MODIFIED,
-	DELETED,
-	NOT_FOUND,
+	NEW = 0,
+	EQUAL = 1,
+	MODIFIED = 2,
+	DELETED = 3,
+	NOT_FOUND = 4,
 }
 export enum FileKind {
-	SOURCE,
-	CONFIG,
+	SOURCE = 0,
+	CONFIG = 1,
 }
 
 export interface FileChange {
@@ -109,7 +111,7 @@ export class FileDictionary {
 	getFileNames(onlyGulp = false) {
 		const fileNames: string[] = [];
 		for (const fileName in this.files) {
-			if (!this.files.hasOwnProperty(fileName)) continue;
+			if (!has(this.files, fileName)) continue;
 			const file = this.files[fileName];
 			if (onlyGulp && !file.gulp) continue;
 			fileNames.push(file.fileNameOriginal);
@@ -166,10 +168,10 @@ export class FileCache {
 	current: FileDictionary;
 	options: ts.CompilerOptions;
 	caseSensitive: boolean;
-	noParse: boolean = false; // true when using a file based compiler.
+	noParse = false; // true when using a file based compiler.
 
 	typescript: typeof ts;
-	version: number = 0;
+	version = 0;
 
 	constructor(
 		typescript: typeof ts,

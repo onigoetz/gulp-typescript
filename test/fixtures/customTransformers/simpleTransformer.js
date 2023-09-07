@@ -1,4 +1,4 @@
-var ts = require('typescript');
+const ts = require('typescript');
 
 function simpleTransformer() {
     return function (file) {

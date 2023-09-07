@@ -1,9 +1,9 @@
 {
-  "name": "gulp-typescript",
+  "name": "@onigoetz/gulp-typescript",
   "version": "6.0.0-alpha.1",
   "description": "A typescript compiler for gulp with incremental compilation support.",
-  "homepage": "https://github.com/ivogabe/gulp-typescript",
-  "bugs": "https://github.com/ivogabe/gulp-typescript/issues",
+  "homepage": "https://github.com/onigoetz/gulp-typescript",
+  "bugs": "https://github.com/onigoetz/gulp-typescript/issues",
   "license": "MIT",
   "keywords": [
     "typescript",
@@ -67,7 +67,7 @@
     "ansi-colors": "^4.1.3",
     "plugin-error": "^2.0.1",
     "source-map": "^0.7.4",
-    "streamx": "2.15.1",
+    "streamx": "^2.15.1",
     "vinyl": "^3.0.0",
     "vinyl-fs": "^4.0.0"
   },
@@ -87,11 +87,12 @@
     "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "typescript": ">= 5.0.0"
+    "typescript": "^5.0.0"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "format": "biome format lib",
+    "format": "biome format lib test/fixtures/*/gulptask.js test/*.js",
+    "check": "biome check lib test/fixtures/*/gulptask.js test/*.js",
     "test": "ava 'test/*\\.test\\.js'",
     "test:ci": "c8 --clean --reporter=text --reporter=lcov --reporter=html --include=index.js ava 'test/*\\.test\\.js'"
   }

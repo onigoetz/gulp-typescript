@@ -1,5 +1,5 @@
-import * as ts from "typescript";
 import * as colors from "ansi-colors";
+import * as ts from "typescript";
 import { VinylFile } from "./types";
 
 export interface TypeScriptError extends Error {
@@ -134,7 +134,7 @@ export function longReporter(): Reporter {
 		finish: defaultFinishHandler,
 	};
 }
-export function fullReporter(fullFilename: boolean = false): Reporter {
+export function fullReporter(fullFilename = false): Reporter {
 	return {
 		error: (error: TypeScriptError, typescript: typeof ts) => {
 			console.log(
@@ -162,15 +162,14 @@ export function fullReporter(fullFilename: boolean = false): Reporter {
 					errorEnd?: number,
 				) => {
 					const line = lines[lineIndex];
-					// eslint-disable-next-line no-param-reassign
-					if (errorEnd === undefined) errorEnd = line.length;
+					const end = errorEnd === undefined ? line.length : errorEnd;
 					console.log(
 						`> ${colors.gray(`[${lineIndex + 1}] `)}${line.substring(
 							0,
 							errorStart,
-						)}${colors.red(
-							line.substring(errorStart, errorEnd),
-						)}${line.substring(errorEnd)}`,
+						)}${colors.red(line.substring(errorStart, end))}${line.substring(
+							end,
+						)}`,
 					);
 				};
 

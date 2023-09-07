@@ -1,6 +1,6 @@
-var gulp = require('gulp');
-var newTS = require('../../../dist/index');
-var lib = require('typescript');
+const gulp = require('gulp');
+const newTS = require('../../../dist/index');
+const lib = require('typescript');
 
 //
 // This is a minimal gulpfile designed to cause the error reported in #563. It
@@ -13,7 +13,7 @@ var lib = require('typescript');
 //
 
 gulp.task('default', function () {
-        var tsProject = newTS.createProject('./sub/tsconfig.json', {
+        const tsProject = newTS.createProject('./sub/tsconfig.json', {
                 typescript: lib,
         });
 

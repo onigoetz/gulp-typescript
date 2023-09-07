@@ -1,8 +1,8 @@
 import * as path from "path";
+import * as colors from "ansi-colors";
 import * as ts from "typescript";
 import { File } from "./input";
 import * as reporter from "./reporter";
-import * as colors from "ansi-colors";
 
 export interface Map<T> {
 	[key: string]: T;
