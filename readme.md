@@ -14,8 +14,6 @@ This plugin works best with gulp 4. If you cannot update to this version, please
 
 Updating from version 2? See the [breaking changes in version 3](http://dev.ivogabe.com/gulp-typescript-3/).
 
-[![Build Status](https://travis-ci.org/ivogabe/gulp-typescript.svg?branch=master)](https://travis-ci.org/ivogabe/gulp-typescript)
-
 How to install
 --------------
 ##### 1. Install gulp CLI
