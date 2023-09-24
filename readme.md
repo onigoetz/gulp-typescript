@@ -1,5 +1,13 @@
 gulp-typescript
 ===============
+
+[![Latest version](https://img.shields.io/github/release/onigoetz/gulp-typescript.svg?style=flat-square)](https://github.com/onigoetz/gulp-typescript/releases)
+![License](https://img.shields.io/github/license/onigoetz/gulp-typescript?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/onigoetz/gulp-typescript/nodejs.yml?style=flat-square&logo=github)
+[![NPM Downloads](https://img.shields.io/npm/dm/@onigoetz/gulp-typescript?style=flat-square&logo=npm)](https://www.npmjs.com/package/@onigoetz/gulp-typescript)
+
+> This is a fork of `gulp-typescript` which is more up-to-date
+
 A gulp plugin for handling TypeScript compilation workflow. The plugin exposes TypeScript's compiler options to gulp using TypeScript API.
 
 This plugin works best with gulp 4. If you cannot update to this version, please see the section "Gulp 3" below.
@@ -20,7 +28,7 @@ npm install gulp@4
 ```
 ##### 3. Install gulp-typescript & TypeScript
 ```shell
-npm install gulp-typescript typescript
+npm install @onigoetz/gulp-typescript typescript
 ```
 
 Options
