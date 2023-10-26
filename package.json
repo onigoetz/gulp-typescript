@@ -62,7 +62,7 @@
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "engines": {
-    "node": ">= 16"
+    "node": ">= 18"
   },
   "dependencies": {
     "ansi-colors": "^4.1.3",
