@@ -62,7 +62,7 @@
   "types": "dist/index.d.ts",
   "typings": "dist/index.d.ts",
   "engines": {
-    "node": ">= 16"
+    "node": ">= 18"
   },
   "dependencies": {
     "ansi-colors": "^4.1.3",
@@ -97,5 +97,5 @@
     "test": "ava 'test/*\\.test\\.js'",
     "test:ci": "c8 --clean --reporter=text --reporter=lcov --reporter=html --include=index.js ava 'test/*\\.test\\.js'"
   },
-  "packageManager": "yarn@3.6.4"
+  "packageManager": "yarn@4.0.0"
 }
