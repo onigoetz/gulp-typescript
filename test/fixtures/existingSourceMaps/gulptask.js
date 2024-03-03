@@ -2,8 +2,8 @@ const gulp = require("gulp");
 const concat = require("gulp-concat");
 const sourcemaps = require("gulp-sourcemaps");
 
-module.exports = function (newTS, lib, output, reporter) {
-	return gulp
+module.exports = (newTS, lib, output, reporter) =>
+	gulp
 		.src("test/fixtures/existingSourceMaps/*.ts")
 		.pipe(sourcemaps.init())
 		.pipe(concat("all.ts"))
@@ -16,7 +16,6 @@ module.exports = function (newTS, lib, output, reporter) {
 		.on("error", () => {})
 		.pipe(sourcemaps.write("."))
 		.pipe(gulp.dest(output));
-};
 
 module.exports.expectFiles = [
 	"all.d.ts",

@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const mergeStream = require("../../merge");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsResult = gulp
 		.src("test/fixtures/emitDeclarationOnly/**/*.ts")
 		.pipe(
@@ -18,7 +18,7 @@ module.exports = function (newTS, lib, output, reporter) {
 	);
 };
 
-module.exports.match = function (lib) {
+module.exports.match = (lib) => {
 	// emitDeclarationOnly was added in TypeScript 2.8.
 	const match = /^(\d+)\.(\d+)/.exec(lib.version);
 	if (!match) return false;

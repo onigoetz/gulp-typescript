@@ -3,7 +3,7 @@ const sourcemaps = require("gulp-sourcemaps");
 
 const mergeStream = require("../../merge");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsResult = gulp
 		.src("test/fixtures/externalResolve/test-2.ts")
 		.pipe(sourcemaps.init())

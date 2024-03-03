@@ -1,6 +1,6 @@
 const gulp = require("gulp");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsProject = newTS.createProject(
 		"test/fixtures/tsconfigInclude/tsconfig.json",
 		{

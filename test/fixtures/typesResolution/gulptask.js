@@ -2,7 +2,7 @@ const gulp = require("gulp");
 const sourcemaps = require("gulp-sourcemaps");
 const mergeStream = require("../../merge");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsProject = newTS.createProject(
 		"test/fixtures/typesResolution/sub/tsconfig.json",
 		{

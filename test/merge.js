@@ -2,7 +2,7 @@ const { finished } = require("node:stream/promises");
 
 const { Writable } = require("node:stream");
 
-module.exports = function (...streams) {
+module.exports = (...streams) => {
 	const newStream = new Writable({
 		objectMode: true,
 		write(chunk, encoding, callback) {

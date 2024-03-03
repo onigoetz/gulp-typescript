@@ -17,7 +17,7 @@ const mergeStream = require("../../merge");
 // tsconfig.json could get one or the other change wrong.
 //
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsProject = newTS.createProject(
 		"test/fixtures/tsconfigExtends/tsconfig.json",
 		{

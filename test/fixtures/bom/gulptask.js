@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const mergeStream = require("../../merge");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const tsProject = newTS.createProject("test/fixtures/bom/tsconfig.json", {
 		typescript: lib,
 	});

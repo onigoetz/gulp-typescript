@@ -2,7 +2,7 @@ const gulp = require("gulp");
 const sourcemaps = require("gulp-sourcemaps");
 const mergeStream = require("../../merge");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const project = newTS.createProject(
 		"test/fixtures/tsconfigProjectReferences/b/tsconfig.json",
 		{
@@ -22,7 +22,7 @@ module.exports = function (newTS, lib, output, reporter) {
 	);
 };
 
-module.exports.match = function (lib) {
+module.exports.match = (lib) => {
 	const match = /^(\d+)(?=\.)/.exec(lib.version);
 	return !!match && parseInt(match[0], 10) >= 3;
 };

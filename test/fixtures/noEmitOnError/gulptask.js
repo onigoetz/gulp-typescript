@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 
-module.exports = function (newTS, lib, output, reporter) {
-	return gulp
+module.exports = (newTS, lib, output, reporter) =>
+	gulp
 		.src("test/fixtures/noEmitOnError/**/*.ts")
 		.pipe(
 			newTS.compile(
@@ -11,6 +11,5 @@ module.exports = function (newTS, lib, output, reporter) {
 		)
 		.on("error", () => {})
 		.pipe(gulp.dest(output));
-};
 
 module.exports.expectFiles = [];

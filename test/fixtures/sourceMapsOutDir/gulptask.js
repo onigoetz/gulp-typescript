@@ -1,7 +1,7 @@
 const gulp = require("gulp");
 const sourcemaps = require("gulp-sourcemaps");
 
-module.exports = function (newTS, lib, output, reporter) {
+module.exports = (newTS, lib, output, reporter) => {
 	const project = newTS.createProject(
 		"test/fixtures/sourceMapsOutDir/src/tsconfig.json",
 		{
