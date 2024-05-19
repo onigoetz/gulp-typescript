@@ -3,6 +3,9 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"files": {
+		"ignore": ["dist/*", "test/fixtures"]
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
