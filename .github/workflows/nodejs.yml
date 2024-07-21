@@ -6,7 +6,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.7
       - name: Setup Biome
         uses: biomejs/setup-biome@v2
       - name: Run Biome
@@ -27,7 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4.1.7
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3.8.2
       with:
