@@ -1,18 +1,12 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": ["dist/*", "test/fixtures"]
+		"includes": ["!dist/*", "!test/fixtures"]
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
-			"style": {
-				"noArguments": "off"
-			},
 			"performance": {
 				"noDelete": "off"
 			},
