@@ -389,17 +389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/vinyl@npm:*":
-  version: 2.0.7
-  resolution: "@types/vinyl@npm:2.0.7"
-  dependencies:
-    "@types/expect": "npm:^1.20.4"
-    "@types/node": "npm:*"
-  checksum: 10c0/1b1cda7a6ab5d9da35eb514e121a09e46f5e72ff54cd3626ccec04742f92fd10eba589dc3934f4808e7be03d24c84029851b78cba431ac63fb37ecb732432f8f
-  languageName: node
-  linkType: hard
-
-"@types/vinyl@npm:2.0.12":
+"@types/vinyl@npm:*, @types/vinyl@npm:2.0.12":
   version: 2.0.12
   resolution: "@types/vinyl@npm:2.0.12"
   dependencies:
