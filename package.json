@@ -85,10 +85,10 @@
     "gulp-plumber": "^1.2.1",
     "gulp-sourcemaps": "^3.0.0",
     "tmp": "^0.2.3",
-    "typescript": "5.3.3"
+    "typescript": "6.0.3"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^6.0.0"
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
